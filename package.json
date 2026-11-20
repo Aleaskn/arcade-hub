@@ -1,0 +1,48 @@
+{
+  "name": "arcade-hub",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=10.0.0"
+  },
+  "scripts": {
+    "dev": "npm run dev:demo",
+    "demo:prepare": "XDG_CONFIG_HOME=.wrangler/config WRANGLER_LOG_PATH=.wrangler/logs/wrangler.log wrangler d1 migrations apply arcade-hub-local --local --persist-to .wrangler/state",
+    "dev:worker": "XDG_CONFIG_HOME=.wrangler/config WRANGLER_LOG_PATH=.wrangler/logs/wrangler.log wrangler dev --local --persist-to .wrangler/state --port 8787 --var DEMO_MODE:true --var NEW_LOBBIES_ENABLED:true",
+    "dev:web": "vite apps/web --host 0.0.0.0",
+    "dev:demo": "npm run demo:prepare && concurrently -k -n worker,web -c magenta,cyan \"npm run dev:worker\" \"npm run dev:web\"",
+    "lint": "eslint . --max-warnings=0",
+    "typecheck": "tsc -p packages/game-engine/tsconfig.json && tsc -p packages/shared/tsconfig.json && tsc -p apps/worker/tsconfig.json && tsc -p apps/web/tsconfig.json && tsc -p tsconfig.json",
+    "test": "vitest run packages/game-engine/src packages/shared/src",
+    "test:integration": "npm run demo:prepare && start-server-and-test dev:worker http://localhost:8787/api/health \"tsx scripts/integration-smoke.ts\"",
+    "test:e2e": "playwright test",
+    "test:load": "npm run demo:prepare && start-server-and-test dev:worker http://localhost:8787/api/health \"tsx scripts/load-test.ts\"",
+    "build:web": "tsc -p apps/web/tsconfig.json && vite build apps/web --config apps/web/vite.config.ts",
+    "build:worker": "XDG_CONFIG_HOME=.wrangler/config WRANGLER_LOG_PATH=.wrangler/logs/wrangler.log wrangler deploy --config wrangler.jsonc --dry-run --outdir apps/worker/dist",
+    "build": "npm run build:web && npm run build:worker",
+    "preview": "npm run build:web && npm run demo:prepare && XDG_CONFIG_HOME=.wrangler/config WRANGLER_LOG_PATH=.wrangler/logs/wrangler.log wrangler dev --local --persist-to .wrangler/state --port 8787 --var DEMO_MODE:true --var NEW_LOBBIES_ENABLED:true",
+    "deploy": "npm run build:web && XDG_CONFIG_HOME=.wrangler/config WRANGLER_LOG_PATH=.wrangler/logs/wrangler.log wrangler deploy",
+    "clean:demo": "tsx scripts/reset-demo.ts"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "latest",
+    "@eslint/js": "latest",
+    "@playwright/test": "latest",
+    "@types/node": "latest",
+    "concurrently": "latest",
+    "eslint": "latest",
+    "eslint-plugin-react-hooks": "latest",
+    "eslint-plugin-react-refresh": "latest",
+    "globals": "latest",
+    "miniflare": "latest",
+    "start-server-and-test": "latest",
+    "tsx": "latest",
+    "typescript": "~6.0.0",
+    "typescript-eslint": "latest",
+    "vitest": "latest",
+    "wrangler": "latest"
+  }
+}

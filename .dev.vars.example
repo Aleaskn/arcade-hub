@@ -1,0 +1,8 @@
+# Copiare in .dev.vars soltanto per lo sviluppo locale Discord.
+# Non commettere mai il file .dev.vars.
+DISCORD_CLIENT_ID=
+DISCORD_CLIENT_SECRET=
+SESSION_SECRET=replace-with-at-least-32-random-characters
+ALLOWED_ORIGINS=http://localhost:5173
+DEMO_MODE=true
+NEW_LOBBIES_ENABLED=true

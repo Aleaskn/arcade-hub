@@ -1,0 +1,17 @@
+{
+  "name": "@arcade-hub/worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run --passWithNoTests",
+    "build": "XDG_CONFIG_HOME=../../.wrangler/config WRANGLER_LOG_PATH=../../.wrangler/logs/wrangler.log wrangler deploy --config ../../wrangler.jsonc --dry-run --outdir dist"
+  },
+  "dependencies": {
+    "@arcade-hub/game-engine": "workspace:*",
+    "@arcade-hub/shared": "workspace:*",
+    "hono": "latest",
+    "zod": "latest"
+  }
+}

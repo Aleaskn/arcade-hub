@@ -1,0 +1,12 @@
+node_modules/
+.pnpm-store/
+dist/
+coverage/
+.wrangler/
+.env
+.env.local
+.dev.vars
+playwright-report/
+test-results/
+*.log
+.DS_Store
